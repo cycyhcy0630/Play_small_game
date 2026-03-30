@@ -4,370 +4,229 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>最討厭食物生死戰</title>
-    <script src="https://cdn.jsdelivr.net/npm/mermaid@9.4.3/dist/mermaid.min.js"></script>
+    <title>🌻 & 🦦 專屬心跳考卷</title>
     <style>
-        /* 全域設定 */
+        :root {
+            --love-pink: #ff758c;
+            --soft-pink: #ff7eb3;
+            --bg: #fff0f3;
+        }
+
         body {
-            margin: 0;
-            font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
-            background-color: white;
+            font-family: 'PingFang TC', sans-serif;
+            background: var(--bg);
             display: flex;
-            flex-direction: column;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        #bracket-img {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            max-width: 250px;
-            border: 2px solid #333;
-            background-color: white;
-            z-index: 100;
-        }
-
-        #header-area {
-            text-align: center;
-            padding: 10px 20px;
-            position: relative;
-        }
-
-        h1 {
-            margin: 10px 0;
-            font-size: 2.5rem;
-        }
-
-        h3 {
-            margin: 5px 0;
-            color: #333;
-            font-size: 1.5rem;
-            background: #eee;
-            display: inline-block;
-            padding: 5px 15px;
-            border-radius: 20px;
-        }
-
-        .instruction {
-            color: #d93025;
-            font-weight: bold;
-            font-size: 1.1rem;
-        }
-
-        #battle-container {
-            display: flex;
-            flex: 1;
-            width: 100%;
-            border-top: 5px solid black;
-            border-bottom: 5px solid black;
-        }
-
-        .side {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            cursor: pointer;
-            transition: all 0.2s ease-in-out;
-            user-select: none;
-        }
-
-        .side:hover {
-            filter: brightness(0.85);
-            transform: scale(1.03);
-            z-index: 10;
-        }
-
-        .red-side {
-            background-color: #ff4d4d;
-            border-right: 5px solid black;
-        }
-
-        .blue-side {
-            background-color: #4d4dff;
-        }
-
-        .food-name {
-            font-size: 6rem;
-            font-weight: bold;
-            color: white;
-            text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.6);
-            letter-spacing: 5px;
-        }
-
-        .record-text {
-            font-size: 1.5rem;
-            color: white;
-            margin-top: 15px;
-            background: rgba(0, 0, 0, 0.4);
-            padding: 5px 15px;
-            border-radius: 10px;
-            font-weight: bold;
-            letter-spacing: 2px;
-        }
-
-        /* 結果回顧表區域 */
-        #result-container {
-            display: none;
-            padding: 40px;
-            text-align: center;
-            height: 100%;
-            overflow-y: auto;
-            background: #fdfdfd;
-        }
-
-        .champion-title {
-            font-size: 3rem;
-            color: #d93025;
-            margin-bottom: 10px;
-        }
-
-        #champion-name {
-            font-size: 5rem;
-            font-weight: bold;
-            text-shadow: 2px 2px 4px #aaa;
-            margin: 0 0 30px 0;
-        }
-
-        /* 爬梯圖容器 */
-        #chart-wrapper {
-            margin: 30px auto;
-            width: 90%;
-            border: 2px dashed #aaa;
+            min-height: 100vh;
+            margin: 0;
             padding: 20px;
-            background: white;
-            border-radius: 10px;
-            overflow-x: auto;
-            /* 讓寬度過長的圖表可以左右滑動 */
         }
 
-        table {
-            margin: 30px auto;
-            border-collapse: collapse;
-            width: 80%;
-            max-width: 800px;
+        #quiz-card {
+            background: white;
+            width: 100%;
+            max-width: 480px;
+            padding: 30px;
+            border-radius: 30px;
+            box-shadow: 0 15px 50px rgba(255, 117, 140, 0.2);
+        }
+
+        .progress {
+            color: var(--love-pink);
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: block;
+            text-align: right;
+        }
+
+        .question {
             font-size: 1.2rem;
+            font-weight: bold;
+            color: #444;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .options {
+            display: grid;
+            gap: 12px;
+        }
+
+        button.opt {
+            padding: 15px;
+            border: 2px solid #ffe5eb;
+            border-radius: 15px;
             background: white;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 1rem;
+            text-align: left;
+            color: #555;
         }
 
-        th,
-        td {
-            border: 1px solid #333;
-            padding: 12px;
+        button.opt:hover {
+            background: #fff5f7;
+            border-color: var(--love-pink);
+            transform: translateY(-2px);
         }
 
-        th {
-            background-color: #f1f1f1;
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
         }
 
-        .win-text {
-            color: red;
+        .modal {
+            background: white;
+            padding: 30px;
+            border-radius: 25px;
+            width: 85%;
+            max-width: 350px;
+            text-align: center;
+        }
+
+        .reason-box {
+            background: #fff9fa;
+            border: 1px dashed var(--love-pink);
+            padding: 15px;
+            margin: 15px 0;
+            font-size: 0.95rem;
+            color: #777;
+            line-height: 1.6;
+            border-radius: 12px;
+        }
+
+        .next-btn {
+            background: linear-gradient(45deg, var(--love-pink), var(--soft-pink));
+            color: white;
+            border: none;
+            padding: 12px 35px;
+            border-radius: 50px;
+            cursor: pointer;
             font-weight: bold;
         }
 
-        .lose-text {
-            color: blue;
+        #final {
+            display: none;
+            text-align: center;
         }
     </style>
 </head>
 
 <body>
 
-    <img src="image.png" id="bracket-img" alt="梯子表">
-
-    <div id="header-area">
-        <h1>最討厭食物生死戰</h1>
-        <h3 id="match-type">準備開始...</h3>
-        <p class="instruction">👇 點擊你覺得【比較討厭】的食物，讓它晉級！(吞兩敗才會淘汰) 👇</p>
-    </div>
-
-    <div id="battle-container">
-        <div class="side red-side" onclick="pick('left')">
-            <span id="left-name" class="food-name">載入中</span>
-            <div id="left-record" class="record-text">0勝 0敗</div>
+    <div id="quiz-card">
+        <div id="game">
+            <span class="progress" id="p-bar">1 / 20</span>
+            <div class="question" id="q-txt"></div>
+            <div class="options" id="opt-list"></div>
         </div>
-        <div class="side blue-side" onclick="pick('right')">
-            <span id="right-name" class="food-name">載入中</span>
-            <div id="right-record" class="record-text">0勝 0敗</div>
+        <div id="final">
+            <h1 style="color: var(--love-pink);">💋 測驗結束 💋</h1>
+            <p id="score-txt" style="font-size: 2.5rem; font-weight: bold;"></p>
+            <p id="eval-txt" style="margin-bottom: 30px; color: #666;"></p>
+            <button class="next-btn" onclick="location.reload()">再親一次 (重新開始)</button>
         </div>
     </div>
 
-    <div id="result-container">
-        <div class="champion-title">🏆 最終最討厭食物霸主 🏆</div>
-        <div id="champion-name"></div>
-
-        <h2>動態賽程爬梯圖 (自動生成)</h2>
-        <p style="color: #666;">（圖表由左至右推進，紀錄每一場的勝敗流向。圖表若太寬可左右滑動）</p>
-        <div id="chart-wrapper">
-            <div class="mermaid" id="bracket-chart"></div>
+    <div id="overlay">
+        <div class="modal">
+            <div id="status-icon" style="font-size: 3rem; margin-bottom: 10px;"></div>
+            <div id="status-title" style="font-weight: bold; font-size: 1.2rem; color: #333;"></div>
+            <div class="reason-box" id="reason-txt"></div>
+            <button class="next-btn" onclick="goNext()">繼續下一題</button>
         </div>
-
-        <h2>賽程對戰成績總表</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>回合</th>
-                    <th>賽局階段</th>
-                    <th>晉級 (較討厭)</th>
-                    <th>吞敗 (較不討厭)</th>
-                </tr>
-            </thead>
-            <tbody id="history-body"></tbody>
-        </table>
     </div>
 
     <script>
-        // 初始化 Mermaid
-        mermaid.initialize({ startOnLoad: false, theme: 'default' });
-
-        const initialFoods = [
-            "香菜", "三色豆", "茄子", "苦瓜",
-            "豬血糕", "芋頭", "青椒", "韭菜",
-            "芹菜", "榴槤", "秋葵", "肥肉",
-            "魚露", "八角", "雞肝", "鹹蛋黃"
+        const quizData = [
+            { q: "🌻 曾評價 🦦 的某件服裝分數是「60 分」，是因為這件衣服在哪裡「開了兩個洞」？", a: ["背後", "胸前", "腰部側面", "大腿處"], c: 2, r: "🌻 當時看到照片直接驚呼：『側面開兩個洞分數超高』，還說這件太危險了。" },
+            { q: "🌻 看到 🦦 穿某件褲子的照片後，曾直白地稱讚她的身材哪部分「很翹」？", a: ["胸部", "屁股", "肩膀", "嘴唇"], c: 1, r: "在 3 月中旬的對話中，🌻 看到照片後大方稱讚 🦦 的屁股很翹，曲線很美。" },
+            { q: "🌻 有一套評價 🦦 服裝尺度的「體表面積公式」，請問哪一個部位被他列為「危險等級最高」？", a: ["鎖骨", "側腰/胸部側邊", "膝蓋", "手肘"], c: 1, r: "🌻 曾認真地說側邊開洞或低胸的衣服危險係數直接爆表，他不希望別人盯著妳看。" },
+            { q: "🌻 曾用哪一個形容詞來感嘆 🦦 的「美腿」？", a: ["還好而已", "真的好扯", "一般般", "太細了"], c: 1, r: "🌻 曾多次在看到 🦦 的全身照或腿部特寫時，發自內心地感嘆：『妳的腿真的好扯』。" },
+            { q: "🦦 曾問 🌻 某件衣服會不會太露，🌻 雖然說 60 分，但也叮囑 🦦 穿這件出門要？", a: ["多穿一件外套", "只能穿給他看", "大方走在路上", "貼滿暖暖包"], c: 1, r: "🌻 的佔有欲爆發，雖然覺得美，但還是忍不住說這種尺度以後只能在家穿給他看。" },
+            { q: "🌻 製作的專屬 GPT 在「深夜時段」會代為回覆什麼色色的訊息？", a: ["我睡著了", "想抱著妳睡", "想看妳的照片", "我在夢裡親妳"], c: 1, r: "🌻 設計的自動回覆中包含想抱著 🦦 睡覺的甜蜜內容，讓他在夢中也黏著妳。" },
+            { q: "🦦 某次累到打錯字，把「教練漏掉」打成「焦糖漏掉」，🌻 當時笑說這個錯字聽起來很？", a: ["色色的", "甜甜的", "笨笨的", "酸酸的"], c: 1, r: "🌻 覺得這個錯字很有妳的風格，聽起來讓心頭甜甜的。" },
+            { q: "兩人達成的「化解尷尬協議」是如果對話突然卡住，就必須？", a: ["親一下", "掛電話", "抱抱", "發一張醜照"], c: 2, r: "你們約定的『尷尬就抱抱』是兩人最親密的肢體接觸約定。" },
+            { q: "🌻 教 🦦 使用 iMessage 時，提到「藍色訊息」代表？", a: ["要錢", "不用錢", "已讀", "對方在打字"], c: 1, r: "這是 🌻 最早教妳的 iMessage 小知識：藍色是不花錢的浪漫。" },
+            { q: "🌻 曾向 🦦 認真解釋賽車的「MGU-K」系統。當時 🦦 的反應更傾向於？", a: ["認真聽講", "覺得想睡覺", "想親 🌻 叫他閉嘴", "聽不懂但覺得帥"], c: 3, r: "這就是你們的日常，🌻 分享專業，🦦 負責在另一頭覺得男友很厲害。" },
+            { q: "🌻 曾發動態或傳訊息稱讚 🦦 的「素顏」或「睡前照」感覺如何？", a: ["很像大嬸", "依然很美、想親", "很普通", "沒感覺"], c: 1, r: "不論 🦦 覺得自己多狼狽，在 🌻 眼中永遠是那個讓他心動、想親親的人。" },
+            { q: "🌻 在 Valorant 中最擅長的角色 Raze 拿到高擊殺時，他會想跟 🦦 討什麼獎勵？", a: ["獎金", "抱抱跟誇獎", "請喝飲料", "打掃房間"], c: 1, r: "每當 🌻 表現出色時，最期待的就是 🦦 的『好棒』和視訊裡的抱抱。" },
+            { q: "🦦 在跳完 Jazz 課後，跟 🌻 抱怨自己全身痠痛，🌻 第一個反應是？", a: ["嘲笑她體力差", "想幫她按摩", "叫她多喝水", "叫她趕快睡覺"], c: 1, r: "🌻 在對話中展現了體貼的一面，即便隔著螢幕也想幫疲累的 🦦 舒壓。" },
+            { q: "兩人的通話紀錄曾長達 5 小時 20 分鐘，這期間你們通常在做什麼？", a: ["瘋狂吵架", "即便不說話也掛著陪伴", "玩遊戲", "看電影"], c: 1, r: "你們最甜蜜的模式就是掛著語音，聽著彼此的呼吸聲和生活雜訊。" },
+            { q: "🌻 為了🦦做了什麼訊息，讓🦦能無時無刻感到安心？", a: ["設計陷阱讓🦦掉進去", "自動回訊息系統", "一直說愛你", "陪🦦睡覺"], c: 2, r: "🌻 用技術解決 🦦 的煩惱，這是資工系男友最實質的溫柔。" },
+            { q: "🌻 的「自動定位報平安」訊息，通常在什麼時候會跳出來？", a: ["出門上班時", "抵達家裡時", "吃飯時", "要睡覺時"], c: 1, r: "每天的『已抵達中壢區住家』是 🌻 給 🦦 最穩定的安全感。" },
+            { q: "🦦 提到自己的媽媽對 🌻 很感興趣，主要是因為 🌻 是 🦦 的？", a: ["大學同學", "高中糾察隊學長", "網友", "同事"], c: 1, r: "這個身分讓媽媽問了超多問題，也讓兩人的緣分聽起來更像校園純愛。" },
+            { q: "在 WBC 中韓大戰比數 22:2 時，🌻 曾開玩笑問 🦦 要不要？", a: ["一起去打球", "一起看球賽直播", "一起睡覺", "一起出去吃宵夜"], c: 1, r: "🌻 總是想把生活中的每個刺激瞬間都跟 🦦 分享。" },
+            { q: "🌻 曾提到他正在寫的網頁專案「最討厭食物大賽」，他曾問 🦦 討厭吃什麼嗎？", a: ["有", "沒有，他只是在分享邏輯", "他強迫 🦦 吃", "他不准 🦦 挑食"], c: 1, r: "🌻 當時正陷在程式邏輯裡，雖然在分享專案，但心裡其實更想聽 🦦 的聲音。" },
+            { q: "🌻 對於 🦦 穿「瑜珈褲」的評價，最核心的關鍵字是？", a: ["顯瘦", "曲線太明顯、想抱", "顏色不好看", "太運動風"], c: 1, r: "對於身材極佳的 🦦，穿上瑜珈褲後的曲線讓 🌻 經常在對話中表示『扛不住』。" }
         ];
 
-        let players = initialFoods.map(name => ({ name: name, wins: 0, losses: 0 }));
-        players.sort(() => Math.random() - 0.5);
+        let curr = 0;
+        let score = 0;
 
-        let history = [];
-        let currentMatch = null;
-
-        // --- Mermaid 爬梯圖生成參數 ---
-        let mermaidCode = "graph LR\n"; // 設定為由左至右的流程圖
-        let lastNode = {}; // 紀錄每個食物「最後一次出現」的節點 ID
-        let matchCounter = 1;
-
-        // 建立初始起點節點
-        initialFoods.forEach((f, i) => {
-            let nId = "S" + i;
-            lastNode[f] = nId;
-            mermaidCode += `  ${nId}(["${f}"])\n`;
-        });
-        // ------------------------------
-
-        function getNextMatch() {
-            let active = players.filter(p => p.losses < 2);
-            if (active.length < 2) return null;
-
-            active.sort((a, b) => {
-                let aGames = a.wins + a.losses;
-                let bGames = b.wins + b.losses;
-                if (aGames !== bGames) return aGames - bGames;
-                if (b.losses !== a.losses) return b.losses - a.losses;
-                return b.wins - a.wins;
+        function render() {
+            const d = quizData[curr];
+            document.getElementById("p-bar").innerText = `${curr + 1} / 20`;
+            document.getElementById("q-txt").innerText = d.q;
+            const list = document.getElementById("opt-list");
+            list.innerHTML = "";
+            d.a.forEach((t, i) => {
+                const b = document.createElement("button");
+                b.className = "opt";
+                b.innerText = t;
+                b.onclick = () => check(i);
+                list.appendChild(b);
             });
+        }
 
-            let p1 = active[0];
-            let p2 = active[1];
-            let type = "";
-            let isFinal = active.length === 2;
+        function check(i) {
+            const d = quizData[curr];
+            const isC = i === d.c;
+            const overlay = document.getElementById("overlay");
+            const icon = document.getElementById("status-icon");
+            const title = document.getElementById("status-title");
+            const reason = document.getElementById("reason-txt");
 
-            if (isFinal) {
-                if (p1.losses === 1 && p2.losses === 1) type = "🔥 終極生死戰 (雙方皆1敗，贏家即冠軍) 🔥";
-                else type = "🏆 總決賽";
-            } else if (p1.wins === 0 && p1.losses === 0 && p2.wins === 0 && p2.losses === 0) {
-                type = "🟢 第一輪";
-            } else if (p1.losses === 1 && p2.losses === 1) {
-                if (p1.wins === 0) type = "🔴 敗者組 (0勝 1敗)";
-                else type = `🟣 勝敗組 (${p1.wins}勝 1敗 vs ${p2.wins}勝 1敗)`;
-            } else if (p1.losses === 0 && p2.losses === 0) {
-                type = `🔵 勝者組 (${p1.wins}勝 0敗 vs ${p2.wins}勝 0敗)`;
+            if (isC) {
+                score += 5;
+                icon.innerText = "💋";
+                title.innerText = "完全答對！";
             } else {
-                type = `⚔️ 混合交鋒 (${p1.wins}勝${p1.losses}敗 vs ${p2.wins}勝${p2.losses}敗)`;
+                icon.innerText = "🙊";
+                title.innerText = "記錯了啦！";
             }
-
-            return { p1, p2, type };
+            reason.innerText = d.r;
+            overlay.style.display = "flex";
         }
 
-        function updateUI() {
-            currentMatch = getNextMatch();
-
-            if (!currentMatch) {
-                showResults();
-                return;
-            }
-
-            document.getElementById('match-type').innerText = `【 目前賽程：${currentMatch.type} 】`;
-            document.getElementById('left-name').innerText = currentMatch.p1.name;
-            document.getElementById('left-record').innerText = `${currentMatch.p1.wins}勝 ${currentMatch.p1.losses}敗`;
-            document.getElementById('right-name').innerText = currentMatch.p2.name;
-            document.getElementById('right-record').innerText = `${currentMatch.p2.wins}勝 ${currentMatch.p2.losses}敗`;
+        function goNext() {
+            document.getElementById("overlay").style.display = "none";
+            curr++;
+            if (curr < 20) render();
+            else showFinal();
         }
 
-        function pick(side) {
-            let winner = side === 'left' ? currentMatch.p1 : currentMatch.p2;
-            let loser = side === 'left' ? currentMatch.p2 : currentMatch.p1;
-            let wName = winner.name;
-            let lName = loser.name;
-
-            winner.wins++;
-            loser.losses++;
-
-            history.push({
-                round: history.length + 1,
-                type: currentMatch.type,
-                winner: wName,
-                loser: lName
-            });
-
-            // --- 更新 Mermaid 爬梯圖腳本 ---
-            let mId = "M" + matchCounter;
-            // 建立此局比賽的節點
-            mermaidCode += `  ${mId}["第${matchCounter}場<br/>${wName} vs ${lName}"]\n`;
-            // 連接雙方上一個節點到這場比賽
-            mermaidCode += `  ${lastNode[wName]} -->|勝| ${mId}\n`;
-            mermaidCode += `  ${lastNode[lName]} -->|敗| ${mId}\n`;
-
-            // 更新雙方的最後節點位置
-            lastNode[wName] = mId;
-            lastNode[lName] = mId;
-
-            matchCounter++;
-            // ------------------------------
-
-            updateUI();
+        function showFinal() {
+            document.getElementById("game").style.display = "none";
+            const f = document.getElementById("final");
+            f.style.display = "block";
+            document.getElementById("score-txt").innerText = `${score} 分`;
+            let msg = score >= 90 ? "你們簡直是熱戀教科書，快去洞洞裝抱抱！" : score >= 70 ? "很了解彼此的身材與癖好喔，繼續保持！" : "看來需要再通話 10 小時深度交流一下了。";
+            document.getElementById("eval-txt").innerText = msg;
         }
 
-        function showResults() {
-            document.getElementById('battle-container').style.display = 'none';
-            document.getElementById('header-area').style.display = 'none';
-            document.getElementById('bracket-img').style.display = 'none';
-            document.body.style.overflow = 'auto';
-            document.getElementById('result-container').style.display = 'block';
-
-            let champion = players.find(p => p.losses < 2).name;
-            document.getElementById('champion-name').innerText = champion;
-
-            // --- 繪製最終爬梯圖冠軍節點 ---
-            let champId = "C1";
-            mermaidCode += `  ${champId}{{"🏆 ${champion} 🏆"}}\n`;
-            mermaidCode += `  ${lastNode[champion]} -->|最終霸主| ${champId}\n`;
-            mermaidCode += `  style ${champId} fill:#ffd700,stroke:#d93025,stroke-width:4px,color:black\n`;
-
-            // 將生成的腳本寫入 DOM 並讓 Mermaid 渲染
-            let chartDiv = document.getElementById('bracket-chart');
-            chartDiv.innerHTML = mermaidCode;
-            mermaid.init(undefined, chartDiv);
-            // ------------------------------
-
-            let tbody = document.getElementById('history-body');
-            history.forEach(match => {
-                let tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${match.round}</td>
-                    <td>${match.type}</td>
-                    <td class="win-text">${match.winner}</td>
-                    <td class="lose-text">${match.loser}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        window.onload = updateUI;
+        render();
     </script>
+
 </body>
 
 </html>
